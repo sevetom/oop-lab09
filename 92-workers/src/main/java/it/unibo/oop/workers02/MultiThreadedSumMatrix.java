@@ -14,27 +14,30 @@ public class MultiThreadedSumMatrix implements SumMatrix{
     private static class Worker extends Thread {
         private final double[][] matrix;
         private int startLine;
-        private int endLine;
+        private int lines;
         private double res;
 
         /**
          * Build a new worker.
          * 
-         * @param line
-         *            the line to sum
+         * @param matrix
+         *            the matrix to sum
+         * @param startpos
+         *            the initial position for this worker
+         * @param nelem
+         *            the no. of lines to sum up for this worker
          */
-        Worker(final double[][] matrix, final int startLine, final int endLine) {
+        Worker(final double[][] matrix, final int startLine, final int lines) {
             super();
             this.matrix = matrix;
             this.startLine = startLine;
-            this.endLine = endLine;
+            this.lines = lines;
         }
 
         @Override
         public void run() {
-            this.endLine -= matrix.length;
-            System.out.println("Working from line " + this.startLine + "to " + this.endLine); // NOPMD
-            for (int l = this.startLine; l < this.endLine; l++) {
+            System.out.println("Working from line " + this.startLine + " for " + this.lines + " lines"); // NOPMD
+            for (int l = this.startLine; l < this.lines + this.startLine && l < matrix.length; l++) {
                 for (double de : matrix[l]) {
                     this.res += de;
                 }
@@ -58,8 +61,8 @@ public class MultiThreadedSumMatrix implements SumMatrix{
          */
         int lineDiv = matrix.length % n + matrix.length / n;
         final List<Worker> workers = new ArrayList<>(this.n);
-        for (int i = 0; i < matrix.length; i += lineDiv) {
-            workers.add(new Worker(matrix, i, lineDiv + i));
+        for (int start = 0; start < matrix.length; start += lineDiv) {
+            workers.add(new Worker(matrix, start, lineDiv));
         }
         /*
          * Start them
