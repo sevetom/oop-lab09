@@ -8,6 +8,9 @@ public class MultiThreadedSumMatrix implements SumMatrix{
     private final int n;
 
     public MultiThreadedSumMatrix(final int n) {
+        if (n < 1) {
+            throw new IllegalArgumentException();
+        }
         this.n = n;
     }
 
