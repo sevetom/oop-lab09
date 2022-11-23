@@ -38,7 +38,7 @@ public class MultiThreadedSumMatrix implements SumMatrix{
         public void run() {
             System.out.println("Working from line " + this.startLine + " for " + this.lines + " lines"); // NOPMD
             for (int l = this.startLine; l < this.lines + this.startLine && l < matrix.length; l++) {
-                for (double de : matrix[l]) {
+                for (final double de : matrix[l]) {
                     this.res += de;
                 }
             }
